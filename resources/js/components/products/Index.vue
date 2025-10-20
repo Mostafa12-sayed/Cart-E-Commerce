@@ -1,5 +1,6 @@
 <template>
-    <div class="content">
+    <div class="content container">
+
         <div class="row mt-3" v-if="products.length">
             <div class="col-md-4" v-for="product in products" :key="product.id">
                 <div class="card mb-3">
@@ -11,7 +12,7 @@
                     >
                         <img
                             class="card-img"
-                            src="https://dummyimage.com/420x260/fff/aaa"
+                            :src="product.image || 'https://dummyimage.com/420x260/fff/aaa'"
                             alt="Vans"
                         />
                     </router-link>
@@ -36,18 +37,19 @@
                                 ></h5>
                             </div>
                             <v-btn
-                                class="btn btn-danger mt-3"
+                                color="primary"
                                 @click="addTocart(product)"
-                                :loading = "loadingCartId === product.id"
+                                :loading="loadingCartId === product.id"
+                                icon="mdi-cart-plus"
                             >
-                                Add to Cart
+
                             </v-btn>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="row mt-3" v-else>Loading...</div>
+        <!-- <div class="row mt-3" v-else>Loading...</div> -->
     </div>
 </template>
 
@@ -58,6 +60,8 @@ export default {
             loadingCartId: null,
         };
     },
+
+
     methods: {
         formatCurrency(amount) {
             amount = amount / 100;
@@ -70,14 +74,16 @@ export default {
             return amount / 100;
             console.log(amount);
         },
-          addTocart(product) {
+        async addTocart(product) {
             this.loadingCartId = product.id;
-            const response = this.$store.dispatch('addToCart' , product);
-                
-            setTimeout(() => {
+            try {
+                await this.$store.dispatch("addToCart", product);
+            } catch (err) {
+                console.error("Error add To cart:", err);
+            } finally {
                 this.loadingCartId = null;
-            }, 1000);
-        }
+            }
+        },
     },
     computed: {
         products() {
@@ -87,9 +93,8 @@ export default {
 };
 </script>
 <style scoped>
-.btn {
-    background-color: #bcd0c7 !important;
-    border-color: #bcd0c7 !important;
-    color: black;
+.content{
+    margin-top: 100px;
 }
+
 </style>

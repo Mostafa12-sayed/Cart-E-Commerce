@@ -11971,3 +11971,44 @@ textarea.form-control-lg {
     display: none !important;
   }
 }
+.table-responsive {
+    overflow-x: auto;
+}
+
+.table th,
+.table td {
+    vertical-align: middle !important;
+    white-space: nowrap;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    h2 {
+        font-size: 1.4rem;
+    }
+
+    .table th,
+    .table td {
+        font-size: 0.85rem;
+        padding: 0.6rem;
+    }
+
+    .v-btn {
+        transform: scale(0.9);
+    }
+
+    .form-control {
+        font-size: 0.9rem;
+    }
+}
+
+/* Extra small screens */
+@media (max-width: 576px) {
+    .checkout {
+        padding: 0 1rem;
+    }
+
+    .v-btn {
+        min-width: 35px !important;
+    }
+}

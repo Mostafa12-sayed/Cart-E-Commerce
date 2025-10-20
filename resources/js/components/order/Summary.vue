@@ -1,5 +1,5 @@
 <template>
-    <div class="checkout">
+    <div class="content checkout">
         <div class="row d-flex flex-row justify-content-center">
             <div class="col-md-8">
                 <div class="mt-5">
@@ -7,9 +7,9 @@
                         class="text-muted small"
                         v-text="'Transaction ID: ' + order.transaction_id"
                     ></h4>
-                    <h2 class="text-muted">Thank you for your purchase</h2>
+                    <h2 class="text-muted mb-4">Thank you for your purchase</h2>
                     <table class="table">
-                        <thead class="table-secondary">
+                        <thead class="table-primary " >
                             <tr>
                                 <th scope="col">Item</th>
                                 <th scope="col">Quantity</th>
@@ -60,29 +60,27 @@ export default {
         },
     },
     mounted() {
-        if (this.$store.state.order.order) {
-            console.log(this.$store.state.order.order);
-
+        if (!this.$store.state.order?.order) {
+            this.$router.push({ name: "products.index" });
         }
     },
     computed: {
         order() {
-            if(!this.$store.state.order.order) return {};           ;
-
-            return this.$store.state.order.order;
+            return this.$store.state.order?.order || {};
         },
         orderQuantity() {
-            return this.$store.state.order.order.products.reduce(
+            if (!this.order.products) return 0;
+            return this.order.products.reduce(
                 (acc, item) => acc + item.pivot.quantity,
                 0
             );
         },
         orderTotal() {
-            let amount = this.$store.state.order.order.products.reduce(
+            if (!this.order.products) return 0;
+            let amount = this.order.products.reduce(
                 (acc, item) => acc + item.price * item.pivot.quantity,
                 0
             );
-
             amount = amount / 100;
             return amount.toLocaleString("en-US", {
                 style: "currency",

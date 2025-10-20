@@ -1,5 +1,8 @@
 import axios from "axios";
 import { createStore } from "vuex";
+import loader from "./modules/loader";
+import api from "@/axios";
+import auth from "./modules/auth";
 
 const store = createStore({
     state: {
@@ -53,7 +56,7 @@ const store = createStore({
     actions: {
         async getProducts({ commit }) {
             try {
-                const res = await axios.get("/api/products");
+                const res = await api.get("/api/products");
                 commit("setProducts", res.data);
             } catch (err) {
                 console.error(err);
@@ -125,32 +128,43 @@ const store = createStore({
             }
         },
         async increment({ commit }, id) {
-            const response = await axios.post("/api/cart/increment", { id:id }, {
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-TOKEN": document.querySelector(
-                        'meta[name="csrf-token"]'
-                    ).content,
-                },
-            });
+            const response = await axios.post(
+                "/api/cart/increment",
+                { id: id },
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": document.querySelector(
+                            'meta[name="csrf-token"]'
+                        ).content,
+                    },
+                }
+            );
             commit("setCart", response.data.cart || []);
             commit("setCartTotal", response.data.total || 0);
             commit("setNumberItems", response.data.cart?.length || 0);
         },
         async decrement({ commit }, id) {
-
-            const response = await axios.post("/api/cart/decrement", { id:id },{
-                 headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-TOKEN": document.querySelector(
-                        'meta[name="csrf-token"]'
-                    ).content,
-                },
-            });
+            const response = await axios.post(
+                "/api/cart/decrement",
+                { id: id },
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": document.querySelector(
+                            'meta[name="csrf-token"]'
+                        ).content,
+                    },
+                }
+            );
             commit("setCart", response.data.cart || []);
             commit("setCartTotal", response.data.total || 0);
             commit("setNumberItems", response.data.cart?.length || 0);
         },
+    },
+    modules: {
+        loader,
+        auth,
     },
 });
 

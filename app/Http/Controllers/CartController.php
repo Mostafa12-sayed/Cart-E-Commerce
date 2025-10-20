@@ -11,11 +11,6 @@ class CartController extends Controller
     public function index(Request $request)
     {
         $cart = $request->session()->get('cart', []);
-
-        // return response()->json([
-        //     'cart' => array_values($cart),
-        //     'total' => $this->calculateTotal($cart)
-        // ]);
         return response()->json([
             'message' => 'Product added to cart successfully!',
             'cart' => array_values($cart),
@@ -45,7 +40,7 @@ class CartController extends Controller
                 'name' => $product->name,
                 'quantity' => 1,
                 'price' => $product->price,
-                'photo' => $product->photo,
+                'image' => $product->image,
                 'id' => $product->id,
             ];
         }

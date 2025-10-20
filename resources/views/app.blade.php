@@ -22,7 +22,7 @@
         @endif
     </head>
     <body >
-      <div class="container">
+      <div class="">
         <div id="app">
         </div>
       </div>

@@ -1,227 +1,189 @@
 <template>
-    <div class="checkout">
-        <div class="row d-flex flex-row justify-content-center">
-            <div class="col-md-8">
-                <div class="mt-5">
-                    <table class="table">
-                        <thead class="table-success">
+    <div class="content checkout container-fluid py-5">
+        <div class="row justify-content-center">
+            <!-- CART DETAILS -->
+            <div class="col-lg-7 col-md-10 col-sm-12 mb-5">
+                <div class="text-center mb-4">
+                    <h2 class="text-muted fw-bold">Cart Details</h2>
+                </div>
+
+                <!-- Make table responsive -->
+                <div class="table-responsive shadow-sm rounded">
+                    <table class="table align-middle">
+                        <thead class="table-primary text-center">
                             <tr>
-                                <th scope="col">Item</th>
-                                <th scope="col">Quantity</th>
-                                <th scope="col">Price</th>
-                                <th scope="col">Action</th>
+                                <th>Item</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="(item, index) in cart" :key="item.id">
-                                <td class="p-4" v-text="item.name"></td>
-                                <td class="p-4">
-                                    <v-btn @click="decrement(item.id)">
-                                        -
-                                    </v-btn>
-                                    <span class="mx-5">{{
-                                        item.quantity
-                                    }}</span>
-                                    <v-btn @click="increment(item.id)">
-                                        +
-                                    </v-btn>
+                                <td class="d-flex flex-row align-items-center p-3">
+                                    <img
+                                        class="card-img"
+                                        :src="item?.image || 'https://dummyimage.com/20x10/fff/aaa'"
+                                        alt="Vans"
+                                    />
+                                    <span>{{ item.name }}</span>
                                 </td>
-                                <td
-                                    class="p-4"
-                                    v-text="cartLineTotal(item)"
-                                ></td>
-                                <td class="w-10 text-right">
+                                <td class="p-3 text-center">
                                     <v-btn
-                                        class="btn btn-sm btn-danger mt-2"
+                                        size="x-small"
+                                        @click="decrement(item.id)"
+                                        icon="mdi-minus"
+                                        :disabled="item.quantity === 1"
+                                    ></v-btn>
+                                    <span class="mx-3 fw-semibold">{{ item.quantity }}</span>
+                                    <v-btn
+                                        size="x-small"
+                                        @click="increment(item.id)"
+                                        icon="mdi-plus"
+                                    ></v-btn>
+                                </td>
+                                <td class="p-3 text-center">
+                                    {{ cartLineTotal(item) }}
+                                </td>
+                                <td class="p-3 text-center">
+                                    <v-btn
+
+                                        rounded="xl"
                                         @click="removeFromCart(item.id)"
                                         :loading="loadingId === item.id"
                                     >
-                                        Remove
+                                        <v-icon color="red">mdi-delete</v-icon>
                                     </v-btn>
                                 </td>
                             </tr>
-                            <tr v-if="cart.length != 0">
-                                <td class="p-4 fw-bold">Total Amount</td>
-                                <td
-                                    class="p-4 fw-bold"
-                                    v-text="this.$store.state.cartTotalQuantity"
-                                ></td>
-                                <td class="p-4 fw-bold">{{ cartTotal }}</td>
-                                <td class="w-10 text-right"></td>
+
+                            <tr v-if="cart.length">
+                                <td class="fw-bold">Total Amount</td>
+                                <td class="fw-bold text-center">
+                                    {{ $store.state.cartTotalQuantity }}
+                                </td>
+                                <td class="fw-bold text-center">
+                                    {{ cartTotal }}
+                                </td>
+                                <td></td>
                             </tr>
+
                             <tr v-else>
-                                <td
-                                    colspan="4"
-                                    class="text-center p-5 text-weight-bold"
-                                >
+                                <td colspan="4" class="text-center py-5 fw-bold text-muted">
                                     No Products added
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-                <div class="mt-5 mb-5" v-if="cart.length != 0">
-                    <div class="row">
-                        <div class="col-md-6 form-group">
-                            <label for="firstname">First Name</label>
+            </div>
+
+            <!-- CHECKOUT DETAILS -->
+            <div class="col-lg-5 col-md-10 col-sm-12 mb-5" v-if="cart.length">
+                <v-card elevation="2" class="p-4 border rounded-3">
+                    <v-card-title>Checkout Details</v-card-title>
+
+                    <div class="row g-3 mt-2">
+                        <div class="col-md-6">
+                            <label>First Name</label>
                             <input
                                 type="text"
                                 class="form-control"
-                                :class="[
-                                    {
-                                        'is-invalid': errorFor(
-                                            'customer.first_name'
-                                        ),
-                                    },
-                                ]"
-                                name="first_name"
                                 v-model="customer.first_name"
                                 :disabled="paymentProcessing"
+                                :class="{ 'is-invalid': errorFor('customer.first_name') }"
                             />
-                            <span class="form-error">{{
-                                errorFor("customer.first_name")
-                            }}</span>
+                            <small class="form-error">{{ errorFor("customer.first_name") }}</small>
                         </div>
-
-                        <div class="col-md-6 form-group">
-                            <label for="lastname">Last Name</label>
+                        <div class="col-md-6">
+                            <label>Last Name</label>
                             <input
                                 type="text"
                                 class="form-control"
-                                :class="[
-                                    {
-                                        'is-invalid':
-                                            errorFor('customer.last_name'),
-                                    },
-                                ]"
-                                name="last_name"
                                 v-model="customer.last_name"
                                 :disabled="paymentProcessing"
+                                :class="{ 'is-invalid': errorFor('customer.last_name') }"
                             />
-                            <span class="form-error">{{
-                                errorFor("customer.last_name")
-                            }}</span>
+                            <small class="form-error">{{ errorFor("customer.last_name") }}</small>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12 form-group">
-                            <label for="email">Email</label>
+                        <div class="col-md-12">
+                            <label>Email</label>
                             <input
                                 type="text"
                                 class="form-control"
-                                :class="[
-                                    {
-                                        'is-invalid':
-                                            errorFor('customer.email'),
-                                    },
-                                ]"
-                                name="email"
                                 v-model="customer.email"
                                 :disabled="paymentProcessing"
+                                :class="{ 'is-invalid': errorFor('customer.email') }"
                             />
-                            <span class="form-error">{{
-                                errorFor("customer.email")
-                            }}</span>
+                            <small class="form-error">{{ errorFor("customer.email") }}</small>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-4 form-group">
-                            <label for="address">Address</label>
+                        <div class="col-md-6">
+                            <label>Address</label>
                             <input
                                 type="text"
                                 class="form-control"
-                                :class="[
-                                    {
-                                        'is-invalid':
-                                            errorFor('customer.address'),
-                                    },
-                                ]"
-                                name="address"
                                 v-model="customer.address"
                                 :disabled="paymentProcessing"
+                                :class="{ 'is-invalid': errorFor('customer.address') }"
                             />
-                            <span class="form-error">{{
-                                errorFor("customer.address")
-                            }}</span>
+                            <small class="form-error">{{ errorFor("customer.address") }}</small>
                         </div>
-                        <div class="col-md-4 form-group">
-                            <label for="city">City</label>
+                        <div class="col-md-6">
+                            <label>City</label>
                             <input
                                 type="text"
                                 class="form-control"
-                                :class="[
-                                    { 'is-invalid': errorFor('customer.city') },
-                                ]"
-                                name="city"
                                 v-model="customer.city"
                                 :disabled="paymentProcessing"
+                                :class="{ 'is-invalid': errorFor('customer.city') }"
                             />
-                            <span class="form-error">{{
-                                errorFor("customer.city")
-                            }}</span>
+                            <small class="form-error">{{ errorFor("customer.city") }}</small>
                         </div>
-                        <div class="col-md-2 form-group">
-                            <label for="state">State</label>
+                        <div class="col-md-6">
+                            <label>State</label>
                             <input
                                 type="text"
                                 class="form-control"
-                                :class="[
-                                    {
-                                        'is-invalid':
-                                            errorFor('customer.state'),
-                                    },
-                                ]"
-                                name="state"
                                 v-model="customer.state"
                                 :disabled="paymentProcessing"
+                                :class="{ 'is-invalid': errorFor('customer.state') }"
                             />
-                            <span class="form-error">{{
-                                errorFor("customer.state")
-                            }}</span>
+                            <small class="form-error">{{ errorFor("customer.state") }}</small>
                         </div>
-                        <div class="col-md-2 form-group">
-                            <label for="zip_code">Zip</label>
+                        <div class="col-md-6">
+                            <label>Zip</label>
                             <input
                                 type="text"
                                 class="form-control"
-                                :class="[
-                                    {
-                                        'is-invalid':
-                                            errorFor('customer.zip_code'),
-                                    },
-                                ]"
-                                name="zip_code"
                                 v-model="customer.zip_code"
                                 :disabled="paymentProcessing"
+                                :class="{ 'is-invalid': errorFor('customer.zip_code') }"
                             />
-                            <span class="form-error">{{
-                                errorFor("customer.zip_code")
-                            }}</span>
+                            <small class="form-error">{{ errorFor("customer.zip_code") }}</small>
                         </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-12 form-group">
-                            <label for="card-element">Credit Card Info</label>
+                        <div class="col-md-12">
+                            <label>Credit Card Info</label>
                             <div id="card-element"></div>
                         </div>
                     </div>
 
-                    <div class="text-center">
+                    <div class="text-center mt-4">
                         <v-btn
-                            class="btn btn-md btn-primary ps-5 pe-5 mt-3"
+                            class="px-5 mt-3"
                             @click="processPayment"
                             :loading="paymentProcessing"
                             :disabled="paymentProcessing"
+                            color="primary"
                         >
                             Pay Now
                         </v-btn>
                     </div>
-                </div>
+                </v-card>
             </div>
         </div>
     </div>
 </template>
+
 
 <script>
 import { loadStripe } from "@stripe/stripe-js";
@@ -366,9 +328,68 @@ export default {
 };
 </script>
 <style scoped>
-.btn {
-    background-color: #bcd0c7 !important;
-    border-color: #bcd0c7 !important;
-    color: black;
+input {
+    border: 1px solid #b6b6b6 !important;
+}
+
+label {
+    color: #000 !important;
+    font-size: 0.95rem;
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+#card-element {
+    padding: 10px;
+    border: 1px solid #b6b6b6;
+    border-radius: 6px;
+}
+
+/* Table responsiveness */
+.table-responsive {
+    overflow-x: auto;
+}
+
+.table th,
+.table td {
+    vertical-align: middle !important;
+    white-space: nowrap;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    h2 {
+        font-size: 1.4rem;
+    }
+
+    .table th,
+    .table td {
+        font-size: 0.85rem;
+        padding: 0.6rem;
+    }
+
+    .v-btn {
+        transform: scale(0.9);
+    }
+
+    .form-control {
+        font-size: 0.9rem;
+    }
+}
+
+/* Extra small screens */
+@media (max-width: 576px) {
+    .checkout {
+        padding: 0 1rem;
+    }
+
+    .v-btn {
+        min-width: 35px !important;
+    }
+}
+.card-img{
+    width:40px;
+    height:40px;
+    margin-right: 10px;
 }
 </style>

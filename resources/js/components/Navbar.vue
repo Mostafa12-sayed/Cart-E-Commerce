@@ -1,5 +1,5 @@
 <template>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">
                 <svg
@@ -9,7 +9,7 @@
                     stroke-linecap="round"
                     stroke-linejoin="round"
                     stroke-width="2"
-                    class="text-dark p-2"
+                    class="text-white p-2"
                     viewBox="0 0 24 24"
                 >
                     <path
@@ -40,16 +40,21 @@
                     </router-link>
                 </ul>
 
-                <nav class="justify-content-end">
+                <nav class=" d-flex align-items-center gap-3 justify-content-end">
+
+
                     <router-link
                         class="btn btn-secondary"
                         :to="{ name: 'order.checkout' }"
+                        color="primary"
                     >
                         <v-icon icon="mdi-cart"></v-icon>
                         <span class="inline-block ms-1"
                             >({{ this.$store.state.numberItems }} item)</span
                         >
                     </router-link>
+                    <router-link class="nav-item" :to="{name: 'login'}" color="primary">Login</router-link>
+                    <router-link class="nav-item" :to="{name: 'register'}" color="primary">Register</router-link>
                 </nav>
             </div>
         </div>
@@ -62,27 +67,32 @@ export default {
             numberItems: 0,
         };
     },
-
-    mounted() {
-        console.log(this.$store.state.numberItems);
-    },
 };
 </script>
 <style scoped>
 svg {
     width: 40px;
     height: 40px;
-    background-color: #bcd0c7;
+    background-color: #1867c0;
     border-radius: 50%;
     margin-right: 5px;
-    color: black;
+    color: white;
 }
-.nav-item {
-    cursor: pointer;
+
+.navbar {
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: #ededed;
+    color: white;
+    box-shadow: 0px 2px 15px #888888;
+    z-index: 1000;
 }
 .btn {
-    background-color: #bcd0c7 !important;
+    background-color: #1867c0 !important;
     border-color: #bcd0c7 !important ;
-    color: black;
+    color: rgb(255, 254, 254);
 }
 </style>
