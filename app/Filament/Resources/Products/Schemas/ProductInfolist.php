@@ -27,6 +27,9 @@ class ProductInfolist
                 ImageEntry::make('image')
                     ->disk('public'),
                 TextEntry::make('deleted_at')
+                    ->visible(function ($record) {
+                        return !is_null($record->deleted_at);
+                    })
                     ->dateTime(),
             ]);
     }

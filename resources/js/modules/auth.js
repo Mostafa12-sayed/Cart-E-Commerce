@@ -1,8 +1,58 @@
-export default {
-    namespaced: true,
-    state: {
-    },
-    mutations: {
+import api from "@/axios";
 
+export default {
+
+
+    state: () => ({
+        authenticated: false,
+        user: {},
+    }),
+
+    getters: {
+        authenticated: (state) => state.authenticated,
+        user: (state) => state.user,
+    },
+
+    mutations: {
+        SET_AUTHENTICATED(state, value) {
+            state.authenticated = value;
+        },
+        SET_USER(state, user) {
+            state.user = user;
+        },
+    },
+
+    actions: {
+        async login({ dispatch }, credentials) {
+            try {
+                await api.post("/api/login", credentials);
+                return dispatch("attempt");
+            } catch (e) {
+                console.error("Login error:", e.response?.data || e.message);
+                throw e;
+            }
+        },
+
+        async attempt({ commit }) {
+            try {
+                const response = await api.get("/api/user");
+                commit("SET_AUTHENTICATED", true);
+                commit("SET_USER", response.data.user || response.data);
+                return response;
+            } catch (e) {
+                commit("SET_AUTHENTICATED", false);
+                commit("SET_USER", {});
+            }
+        },
+
+        async logout({ commit }) {
+            try {
+                await api.post("/api/logout");
+            } catch (_) {}
+
+            commit("SET_AUTHENTICATED", false);
+            commit("SET_USER", {});
+            commit("clearCart");
+        },
     },
 };

@@ -12012,3 +12012,6 @@ textarea.form-control-lg {
         min-width: 35px !important;
     }
 }
+.fi-simple-header .fi-logo{
+    width: 20rem;
+}

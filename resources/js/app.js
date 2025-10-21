@@ -1,6 +1,5 @@
 import "./bootstrap";
-
-import { createApp, onBeforeMount } from "vue";
+import { createApp } from "vue";
 import { createRouter, createWebHistory } from "vue-router";
 import { routes } from "./routers.js";
 import App from "./components/App.vue";
@@ -9,40 +8,61 @@ import "vuetify/styles";
 import { createVuetify } from "vuetify";
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
-import "@mdi/font/css/materialdesignicons.css"; // ✅ icons
-// إنشاء الـ Router بالطريقة الجديدة
+import "@mdi/font/css/materialdesignicons.css";
 const router = createRouter({
     history: createWebHistory(),
     routes,
-});
-router.beforeEach((to, from, next) => {
-    document.title = to.meta.title;
-    next();
 });
 const vuetify = createVuetify({
     components,
     directives,
     icons: {
-        defaultSet: "mdi", // ✅ نستخدم Material Design Icons
+        defaultSet: "mdi",
     },
 });
 const app = createApp(App);
+
 app.mixin({
     created() {
         if (this === this.$root) {
-            this.$store
-                .dispatch("getProducts")
-                .then(() => {})
-                .catch((error) => console.error(error));
-            this.$store
-                .dispatch("getCart")
-                .then(() => {})
-                .catch((error) => console.error(error));
+            const actions = ["getProducts", "getCart"];
+            actions.forEach(action => {
+                this.$store.dispatch(action).catch(console.error);
+            });
         }
     },
 });
+router.beforeEach(async (to, from, next) => {
+    store.commit("loader/showLoader");
+
+    if (!store.getters["authenticated"]) {
+        try {
+            await store.dispatch("attempt");
+        } catch (e) {}
+    }
+    if (['login', 'register'].includes(to.name) && from.fullPath) {
+        localStorage.setItem('previous_url', from.fullPath);
+    }
+    const isAuthenticated = store.getters["authenticated"];
+    if (to.meta.requiresAuth && !isAuthenticated) {
+        return next({ name: "login" });
+    }
+
+    if (to.meta.guest && isAuthenticated) {
+        return next({ name: "products.index" });
+    }
+
+    next();
+});
+router.afterEach(() => {
+    // إيقاف الـ loader بعد انتهاء التنقل
+    store.commit("loader/hideLoader");
+});
+
 
 app.use(router);
 app.use(store);
 app.use(vuetify);
-app.mount("#app");
+app.mount('#app')
+
+

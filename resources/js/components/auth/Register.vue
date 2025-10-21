@@ -98,7 +98,7 @@ import useVuelidate from "@vuelidate/core";
 import { email, required, sameAs, helpers } from "@vuelidate/validators";
 import CardComponent from "@/components/CardComponent.vue";
 // import { register } from "@/axios/authService";
-
+import api from "@/axios";
 export default {
     name: "RegisterView",
     components: { CardComponent },
@@ -151,25 +151,26 @@ export default {
             this.loading = true;
             this.error = null;
             try {
-                // const user = await register({
-                //     email: this.state.email,
-                //     password: this.state.password,
-                //     name: this.state.name,
-                //     password_confirmation: this.state.confirmPassword,
-                // });
-                // if (user?.token) {
-                //     localStorage.setItem("token", user.token);
-                //     this.$router.push({ name: "home" });
-                // } else {
-                //     throw new Error("Invalid server response.");
-                // }
+                const user = await api.post('/api/register', {
+                    email: this.state.email,
+                    password: this.state.password,
+                    name: this.state.name,
+                    password_confirmation: this.state.confirmPassword,
+                });
+                console.log(user)
+                if(user.data.success)
+                {
+                    this.$store.dispatch('attempt')
+                    this.$router.push({ name: 'products.index' })
+                }
+
             } catch (err) {
                 console.error(err);
                 if (err) {
-                    const data = err?.response?.data || err;
-
-                    if (data?.email) this.error = data.email;
-                    else if (data?.password) this.error = data.password;
+                    const data = err?.response?.data?.errors || err;
+                    if (data?.email) this.error = data.email[0];
+                    else if (data?.name) this.error = data.name[0];
+                    else if (data?.password) this.error = data.password[0];
                     else if (typeof data?.message === "string") this.error = data.message;
                     else this.error = "Registration failed. Please try again.";
                 }

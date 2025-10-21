@@ -65,7 +65,7 @@ const store = createStore({
 
         async getCart({ commit, getters, state }) {
             try {
-                const res = await axios.get("/api/cart");
+                const res = await api.get("/api/cart");
                 commit("setCart", res.data.cart || []);
                 commit("setNumberItems", res.data.length); // ✅ بدون ()
                 commit("setCartTotal", res.data.total || 0); // ✅ بدون ()
@@ -76,32 +76,21 @@ const store = createStore({
 
         async addToCart({ commit }, product) {
             try {
-                const response = await fetch(`/api/add-to-cart/${product.id}`, {
-                    method: "POST",
-                    credentials: "same-origin",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-CSRF-TOKEN": document.querySelector(
-                            'meta[name="csrf-token"]'
-                        ).content,
-                    },
-                    body: JSON.stringify({
-                        id: product.id,
-                        name: product.name,
-                        price: product.price,
-                        quantity: 1,
-                        image: product.image,
-                    }),
+                const response = await api.post(`api/add-to-cart/${product.id}`, {
+                    id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    quantity: 1,
+                    image: product.image,
                 });
 
-                if (!response.ok) throw new Error("Failed to add item to cart");
+                const data = response.data; // ✅ Axios يرجع هنا البيانات مباشرة
 
-                const data = await response.json();
                 commit("setCart", data.cart || []);
-                commit("setNumberItems", data.length); // ✅ بدون ()
-                commit("setCartTotal", data.total || 0); // ✅ بدون ()
+                commit("setNumberItems", data.length || 0);
+                commit("setCartTotal", data.total || 0);
             } catch (err) {
-                console.error(err);
+                console.error("❌ Error adding to cart:", err.response?.data || err.message);
             }
         },
 
@@ -110,7 +99,8 @@ const store = createStore({
         },
         async removeFromCart({ commit }, id) {
             try {
-                const res = await axios.delete(`/api/remove-from-cart/${id}`, {
+
+                const res = await api.delete(`/api/remove-from-cart/${id}`, {
                     headers: {
                         "Content-Type": "application/json",
                         "X-CSRF-TOKEN": document.querySelector(
@@ -119,7 +109,6 @@ const store = createStore({
                     },
                 });
 
-                // axios بيرجع البيانات داخل res.data
                 commit("setCart", res.data.cart || []);
                 commit("setCartTotal", res.data.total || 0);
                 commit("setNumberItems", res.data.cart?.length || 0);
@@ -128,7 +117,8 @@ const store = createStore({
             }
         },
         async increment({ commit }, id) {
-            const response = await axios.post(
+
+            const response = await api.post(
                 "/api/cart/increment",
                 { id: id },
                 {
@@ -145,7 +135,7 @@ const store = createStore({
             commit("setNumberItems", response.data.cart?.length || 0);
         },
         async decrement({ commit }, id) {
-            const response = await axios.post(
+            const response = await api.post(
                 "/api/cart/decrement",
                 { id: id },
                 {

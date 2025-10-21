@@ -4,10 +4,11 @@ namespace App\Filament\Resources\Orders\Schemas;
 
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
+use Tiptap\Nodes\Table;
 
 class OrderForm
 {
-    public static function configure(Schema $schema): Schema
+    public static function configure(Schema $schema ,): Schema
     {
         return $schema
             ->components([
@@ -20,6 +21,7 @@ class OrderForm
                     ->required()
                     ->numeric()
                     ->default(0),
+
             ]);
     }
 }

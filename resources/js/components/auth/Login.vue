@@ -14,7 +14,7 @@
         >
             {{ error }}
         </v-alert>
-        <form @submit.prevent="login">
+        <form @submit.prevent="submit">
             <v-text-field
                 v-model="state.email"
                 :error-messages="v$?.state.email.$errors.map((e) => e.$message)"
@@ -55,7 +55,7 @@
                     <v-card-text class="text-left">
                         Forgot password?
                         <router-link
-                            to="/"
+                            :to="{ name: 'recover-password' }"
                             class="text-primary text-decoration-none hover:underline"
                         >
                             Recover
@@ -73,6 +73,7 @@
                         >
                     </v-card-text>
                 </v-col>
+
             </v-row>
         </form>
     </card-component>
@@ -83,6 +84,7 @@ import { useVuelidate } from "@vuelidate/core";
 import { email, required } from "@vuelidate/validators";
 import CardComponent from "@/components/CardComponent.vue";
 // import { login } from "@/axios/authService";
+import api from "@/axios";
 
 export default {
     name: "LoginView",
@@ -118,54 +120,30 @@ export default {
             this.state.password = "";
             this.error = null;
         },
-         async login() {
-             this.error = null;
-
-            try {
-                // أولاً نحصل على CSRF cookie
-                await axios.get('/sanctum/csrf-cookie');
-
-                // ثم نرسل بيانات الدخول
-                const response = await axios.post('/login', {
-                    email:   this.state.email,
-                    password:   this.state.password,
-                });
-
-                console.log('✅ Logged in', response.data);
-                // الآن الكوكي اتخزن تلقائيًا في المتصفح
-            } catch (err) {
-                console.error(err);
-                error.value = err.response?.data?.message || 'Login failed';
-            }
-        },
         async submit() {
             await this.v$.$validate();
             if (this.v$.$invalid) return;
             this.loading = true;
-            try {
-                // const user = await login({
-                //     email: this.state.email,
-                //     password: this.state.password,
-                // });
-                // localStorage.setItem("token", user.token);
-                // this.$router.push({ name: "home" });
-            } catch (err) {
-                if (err) {
-                    this.loading = false;
-                    const data = err;
 
-                    if (data.email) {
-                        this.error = data.email;
-                    } else if (data.password) {
-                        this.error = data.password;
-                    } else {
-                        this.error = "Login failed. Please check your credentials.";
-                    }
-                } else {
-                    this.error = "Network error. Please try again.";
+            try {
+                await this.$store.dispatch("login", {
+                    email: this.state.email,
+                    password: this.state.password,
+                });
+
+                if (this.$store.getters["authenticated"]) {
+                    // 🔙 رجع المستخدم للصفحة السابقة إن وُجدت
+                    const previous = localStorage.getItem("previous_url") || "/";
+                    localStorage.removeItem("previous_url");
+                    this.$router.push(previous);
                 }
+            } catch (err) {
+                this.error = err.response?.data?.message || "Login failed";
+            } finally {
+                this.loading = false;
             }
-        },
+        }
+
     },
 
 };

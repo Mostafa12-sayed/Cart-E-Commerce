@@ -2,12 +2,13 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Pages\Dashboard;
 use App\Filament\Resources\Orders\OrderResource;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Pages\Dashboard;
+//use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
@@ -46,11 +47,16 @@ class AdminPanelProvider extends PanelProvider
                 FilamentInfoWidget::class,
             ])
             ->resources([
-               ProductResource::class,
-               CategoryResource::class,
-                OrderResource::class
+                OrderResource::class,
 
+               CategoryResource::class,
+
+               ProductResource::class,
             ])
+            ->brandLogo(asset('assets/images/logo.PNG'))
+            ->brandLogoHeight('5rem')
+            ->favicon(asset('assets/images/logo.PNG'))
+            ->globalSearch(false)
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,

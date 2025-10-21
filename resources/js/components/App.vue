@@ -80,6 +80,7 @@ nav {
         font-weight: bold;
         color: #1867c0;
         text-decoration: none;
+        cursor: pointer;
         &.router-link-exact-active {
             color: #42b983;
         }
@@ -88,7 +89,7 @@ nav {
 a {
     font-weight: bold;
     color: #1867c0;
-
+    cursor: pointer;
     &.router-link-exact-active {
         color: #42b983;
     }

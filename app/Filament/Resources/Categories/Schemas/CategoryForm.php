@@ -13,6 +13,7 @@ class CategoryForm
             ->components([
                 TextInput::make('name')
                     ->required()
+                    ->unique()
                     ->columnSpanFull(),
 
             ]);

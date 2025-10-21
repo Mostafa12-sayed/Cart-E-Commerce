@@ -7,23 +7,29 @@ const api = axios.create({
 });
 
 api.interceptors.request.use(
-  (config) => {
-    store.commit("loader/showLoader");
+  async(config  ) => {
+      const needsCsrf = ["post", "put", "patch", "delete"].includes(config.method);
+      if (needsCsrf) {
+          if (!document.cookie.includes("XSRF-TOKEN")) {
+              await axios.get("/sanctum/csrf-cookie", { withCredentials: true });
+          }
+      }
+    // store.commit("loader/showLoader");
     return config;
   },
   (error) => {
-    store.commit("loader/hideLoader");
+    // store.commit("loader/hideLoader");
     return Promise.reject(error);
   }
 );
 
 api.interceptors.response.use(
   (response) => {
-    store.commit("loader/hideLoader");
+    // store.commit("loader/hideLoader");
     return response;
   },
   (error) => {
-    store.commit("loader/hideLoader");
+    // store.commit("loader/hideLoader");
     return Promise.reject(error);
   }
 );

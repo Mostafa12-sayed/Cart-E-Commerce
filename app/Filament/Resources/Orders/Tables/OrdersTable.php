@@ -15,12 +15,13 @@ class OrdersTable
     {
         return $table
             ->columns([
-                TextColumn::make('user_id')
+                TextColumn::make('user.name')
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('transaction_id')
                     ->searchable(),
                 TextColumn::make('total')
+                    ->prefix('$')
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('created_at')
@@ -37,7 +38,7 @@ class OrdersTable
             ])
             ->recordActions([
                 ViewAction::make(),
-                EditAction::make(),
+//                EditAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

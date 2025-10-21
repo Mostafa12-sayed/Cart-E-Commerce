@@ -2,7 +2,7 @@
   <v-container class="mx-auto h-100">
     <v-card class="mx-auto pa-8" elevation-24 max-width="500" hover>
       <v-card-item>
-        <v-card-title class="text-h3 font-weight-bold">{{
+        <v-card-title class="text-h4 font-weight-bold">{{
           title
         }}</v-card-title>
         <v-card-subtitle>{{ subtitle }} </v-card-subtitle>
