@@ -2,7 +2,7 @@
         <card-component
             :title="'Reset Password'"
             :subtitle="'Enter your email to recover your password.'"
-            class="content"
+            class="center-container"
         >
             <v-alert
                 v-if="error"
@@ -17,14 +17,36 @@
             <form @submit.prevent="submit">
                 <v-text-field
                     v-model="state.email"
-                    :error-messages="v$?.state.email.$errors.map((e) => e.$message)"
+                    :error-messages="v$.email.$errors.map((e) => e.$message)"
                     label="E-mail"
                     required
-                    @blur="v$.state.email.$touch"
-                    @input="v$.state.email.$touch"
+                    @blur="v$.email.$touch"
+                    @input="v$.email.$touch"
                     type="email"
                     class="mx-auto mb-5"
                     autocomplete="email"
+                ></v-text-field>
+                <v-text-field
+                    v-model="state.password"
+                    :error-messages="v$.password.$errors.map((e) => e.$message)"
+                    label="Password"
+                    type="password"
+                    required
+                    @blur="v$.password.$touch"
+                    @input="v$.password.$touch"
+                    class="mx-auto mb-5"
+                    autocomplete="password"
+                ></v-text-field>
+                <v-text-field
+                    v-model="state.confirmPassword"
+                    :error-messages="v$.confirmPassword.$errors.map((e) => e.$message)"
+                    label="Confirm Password"
+                    type="password"
+                    required
+                    @blur="v$.confirmPassword.$touch"
+                    @input="v$.confirmPassword.$touch"
+                    class="mx-auto mb-5"
+                    autocomplete="current-password"
                 ></v-text-field>
                 <v-btn
                     class="me-4"
@@ -35,32 +57,8 @@
                 >
                     Submit
                 </v-btn>
-                <v-btn @click="clear" color="red">Clear</v-btn>
 
-                <v-row class="justify-space-between mt-3">
-                    <v-col cols="6" class="pa-2">
-                        <v-card-text class="text-left">
-                            Forgot password?
-                            <router-link
-                                to="/"
-                                class="text-primary text-decoration-none hover:underline"
-                            >
-                                Recover
-                            </router-link>
-                        </v-card-text>
-                    </v-col>
 
-                    <v-col cols="6" class="pa-2">
-                        <v-card-text class="text-right">
-                            Not registered?
-                            <router-link
-                                :to="{ name: 'register' }"
-                                class="text-primary text-decoration-none hover:underline text-right"
-                            >Sign up</router-link
-                            >
-                        </v-card-text>
-                    </v-col>
-                </v-row>
             </form>
         </card-component>
 
@@ -68,35 +66,59 @@
 
 
 <script>
-import {email, required} from "@vuelidate/validators";
+import {email, helpers, required, sameAs} from "@vuelidate/validators";
 import {useVuelidate} from "@vuelidate/core";
 import CardComponent from "@/components/CardComponent.vue";
 import api from "@/axios";
+import {computed, reactive} from "vue";
+import { useRoute, useRouter } from "vue-router";
+import {useToast} from "vue-toastification";
+
 export default {
+
     name: "RecoverPassword",
     components: { CardComponent },
 
     data() {
         return {
-            state: {
-                email: "",
-            },
+
             error: null,
-            v$: null,
             loading: false,
         };
     },
+    setup() {
+        const route = useRoute();
+        const router = useRouter();
+        // setup() is still used for Vuelidate because Options API uses it internally
+        const initialState = {
+            password: "",
+            email: route.query.email || "",
+            confirmPassword: "",
+        };
 
-    validations() {
-        return {
-            state: {
-                email: { required, email },
+        const state = reactive({ ...initialState });
+        const passwordRef = computed(() => state.password);
+
+        const rules = {
+            email: { required, email },
+            password: { required },
+            confirmPassword: {
+                required,
+                sameAsPassword: helpers.withMessage(
+                    "Passwords do not match",
+                    sameAs(passwordRef)
+                ),
             },
         };
+
+            const toast = useToast()
+
+
+
+        const v$ = useVuelidate(rules, state);
+        return { state, v$, route, router ,toast };
     },
-    created() {
-        this.v$ = useVuelidate(this.$options.validations.call(this), this);
-    },
+
     methods: {
         clear() {
             this.v$.$reset();
@@ -107,12 +129,19 @@ export default {
             await this.v$.$validate();
             if (this.v$.$invalid) return;
             this.loading = true;
-
             try {
-                const user = await api.post('/api/recover-password', {
+                const user = await api.post('/api/reset-password', {
                     email: this.state.email,
+                    token: this.$route.query.token,
+                    password: this.state.password,
+                    password_confirmation: this.state.confirmPassword,
                 });
-                console.log(user)
+
+                if(user.data.success)
+                {
+                    this.$router.push({name :'login'})
+                    this.toast.success(user.data.message);
+                }
 
             } catch (err) {
                 console.log(err)

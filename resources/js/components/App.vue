@@ -32,6 +32,7 @@ export default {
     margin-top: 100px !important;
 }
 
+
 /* Table responsiveness */
 .table-responsive {
     overflow-x: auto;

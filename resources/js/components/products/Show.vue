@@ -2,9 +2,10 @@
     <div class="content container ">
         <div class="row g-4 align-items-center">
             <!-- Product Image -->
-            <div class="col-12 col-md-6 text-center">
+
+            <div class="col-12 col-md-6 shadow-sm text-center p-4">
                 <img
-                    class="img-fluid rounded shadow-sm product-image"
+                    class="img-fluid rounded  product-image"
                     :src="getImageUrl(product.image) || 'https://dummyimage.com/640x640/bbb/555'"
                     alt="Product image"
                 />

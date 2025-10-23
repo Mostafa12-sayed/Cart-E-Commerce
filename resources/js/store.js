@@ -3,7 +3,7 @@ import { createStore } from "vuex";
 import loader from "./modules/loader";
 import api from "@/axios";
 import auth from "./modules/auth";
-
+import orders from "./modules/orders";
 const store = createStore({
     state: {
         products: [],
@@ -155,6 +155,7 @@ const store = createStore({
     modules: {
         loader,
         auth,
+        orders
     },
 });
 

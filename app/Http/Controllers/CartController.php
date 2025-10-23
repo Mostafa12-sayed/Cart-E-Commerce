@@ -96,7 +96,7 @@ class CartController extends Controller
     {
         return array_reduce($cart, function ($total, $item) {
             return $total + ($item['price'] * $item['quantity']);
-        }, 0);
+        }, 0) / 100;
     }
 
     public function incrementQuantity(Request $request)

@@ -69,4 +69,22 @@ export const routes = [
             guest: true // ✅ برضو للضيوف فقط
         }
     },
+    {
+        name: "my-orders",
+        path: "/my-orders",
+        component: () => import("./components/order/MyOrder.vue"),
+        meta: {
+            title: 'My Order',
+            requiresAuth: true // ✅ برضو جزء من عملية الشراء
+        }
+    },
+    {
+        name: "order.show",
+        path: "/order/:id",
+        component: () => import("./components/order/OrderDatils.vue"),
+        meta: {
+            title: 'My Order',
+            requiresAuth: true // ✅ برضو جزء من عملية الشراء
+        }
+    },
 ];

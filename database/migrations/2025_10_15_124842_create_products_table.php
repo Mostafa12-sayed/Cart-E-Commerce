@@ -17,6 +17,10 @@ return new class extends Migration
             $table->text('description');
             $table->string('slug')->nullable();
             $table->integer('price')->default(0);
+            $table->integer('stock')->default(0);
+            $table->string('sku')->nullable();
+            $table->string('image')->nullable();
+            $table->softDeletes(); // Adds deleted_at column
             $table->timestamps();
         });
     }

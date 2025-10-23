@@ -2,20 +2,6 @@
     <nav class="navbar navbar-expand-lg">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">
-<!--                <svg-->
-<!--                    xmlns="http://www.w3.org/2000/svg"-->
-<!--                    fill="none"-->
-<!--                    stroke="currentColor"-->
-<!--                    stroke-linecap="round"-->
-<!--                    stroke-linejoin="round"-->
-<!--                    stroke-width="2"-->
-<!--                    class="text-white p-2"-->
-<!--                    viewBox="0 0 24 24"-->
-<!--                >-->
-<!--                    <path-->
-<!--                        d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"-->
-<!--                    ></path>-->
-<!--                </svg>-->
                 <img src="../public/images/logo.PNG" alt="">
                 | Online Shop</a
             >
@@ -31,7 +17,7 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0 text-center text-md-start">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 text-center text-md-start d-flex gap-3">
                     <li class="nav-item">
                         <router-link
                             class="nav-item"
@@ -39,6 +25,15 @@
                             active-class="active"
                         >
                             Products
+                        </router-link>
+                    </li>
+                    <li class="nav-item">
+                        <router-link
+                            class="nav-item"
+                            :to="{ name: 'my-orders' }"
+                            active-class="active"
+                        >
+                            My Orders
                         </router-link>
                     </li>
                 </ul>
@@ -133,7 +128,7 @@ svg {
     z-index: 1000;
 }
 .navbar-brand img{
-    width: 100px;
+    width: 80px;
     height: 50px;
 }
 .btn {

@@ -35,7 +35,7 @@
                             <img :src="item.image" width="60" class="rounded me-3" />
                             <div>
                                 <h6 class="fw-bold mb-1">{{ item.name }}</h6>
-                                <small class="text-muted">${{ item.price / 100 }}</small>
+                                <small class="text-muted">${{ item.price }}</small>
                             </div>
                         </div>
 
@@ -338,7 +338,7 @@ export default {
 
         cartTotal() {
             let amount = this.$store.state.cartTotal;
-            amount = amount / 100;
+            // amount = amount / 100;
             return amount.toLocaleString("en-US", {
                 style: "currency",
                 currency: "USD",

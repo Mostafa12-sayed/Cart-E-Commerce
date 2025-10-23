@@ -14,15 +14,9 @@ class UsersController extends Controller
 {
     public function purchase(Request $request)
     {
-        // ✅ جلب بيانات السلة من الـ frontend مباشرة (مش من session)
         $cart = session()->get('cart');
-        Log::info('Cart: '.json_encode($cart));
-        // ✅ إنشاء أو استرجاع المستخدم حسب الإيميل
-        $user = User::firstOrCreate(
-            ['email' => $request->input('email')],
-            [
-                'password' => Hash::make(Str::random(12)),
-                'name' => $request->input('first_name').' '.$request->input('last_name'),
+        $loginUser =auth()->user();
+        $user = $loginUser->update([
                 'address' => $request->input('address'),
                 'city' => $request->input('city'),
                 'state' => $request->input('state'),
@@ -32,7 +26,7 @@ class UsersController extends Controller
 
         try {
             // ✅ إنشاء Stripe Customer (إن لم يكن موجود)
-            $user->createOrGetStripeCustomer();
+            $loginUser->createOrGetStripeCustomer();
 
             Stripe::setApiKey(config('services.stripe.secret'));
 
@@ -40,7 +34,7 @@ class UsersController extends Controller
             $paymentIntent = PaymentIntent::create([
                 'amount' => intval($request->input('amount') * 100), // Stripe يستخدم القروش
                 'currency' => 'usd',
-                'customer' => $user->stripe_id,
+                'customer' => $loginUser->stripe_id,
                 'payment_method' => $request->input('payment_method_id'),
                 'automatic_payment_methods' => [
                     'enabled' => true,
@@ -49,7 +43,7 @@ class UsersController extends Controller
             ]);
             Log::info('PaymentIntent created: '.$paymentIntent);
             // ✅ حفظ الطلب في قاعدة البيانات
-            $order = $user->orders()->create([
+            $order = $loginUser->orders()->create([
                 'transaction_id' => $paymentIntent->id,
                 'total' => $paymentIntent->amount,
             ]);

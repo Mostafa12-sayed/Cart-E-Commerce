@@ -1,5 +1,5 @@
 <template>
-  <v-container class="mx-auto h-100">
+  <v-container class="mx-auto ">
     <v-card class="mx-auto pa-8" elevation-24 max-width="500" hover>
       <v-card-item>
         <v-card-title class="text-h4 font-weight-bold">{{

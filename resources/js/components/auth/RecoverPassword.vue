@@ -2,7 +2,7 @@
         <card-component
             :title="'Recover Password'"
             :subtitle="'Enter your email to recover your password.'"
-            class="content"
+            class="center-container"
         >
             <v-alert
                 v-if="error"
@@ -14,6 +14,8 @@
             >
                 {{ error }}
             </v-alert>
+            <p v-if="message">{{ message }}</p>
+
             <form @submit.prevent="submit">
                 <v-text-field
                     v-model="state.email"
@@ -35,23 +37,7 @@
                 >
                     Submit
                 </v-btn>
-                <v-btn @click="clear" color="red">Clear</v-btn>
 
-                <v-row class="justify-space-between mt-3">
-                    <v-col cols="12" class="pa-2">
-                        <v-card-text class="text-left">
-                            You have Code ?
-                            <router-link
-                                :to="{name: 'reset-password'}"
-                                class="text-primary text-decoration-none hover:underline"
-                            >
-                                Reset
-                            </router-link>
-                        </v-card-text>
-                    </v-col>
-
-
-                </v-row>
             </form>
         </card-component>
 
@@ -63,6 +49,8 @@ import {email, required} from "@vuelidate/validators";
 import {useVuelidate} from "@vuelidate/core";
 import CardComponent from "@/components/CardComponent.vue";
 import api from "@/axios";
+import { useToast } from 'vue-toastification'
+
 export default {
     name: "RecoverPassword",
     components: { CardComponent },
@@ -75,7 +63,13 @@ export default {
             error: null,
             v$: null,
             loading: false,
+            message: null,
         };
+    },
+    setup(){
+        const toast = useToast()
+
+        return {toast};
     },
 
     validations() {
@@ -89,25 +83,20 @@ export default {
         this.v$ = useVuelidate(this.$options.validations.call(this), this);
     },
     methods: {
-        clear() {
-            this.v$.$reset();
-            this.state.email = "";
-            this.error = null;
-        },
         async submit() {
             await this.v$.$validate();
             if (this.v$.$invalid) return;
             this.loading = true;
 
             try {
-                const user = await api.post('/api/recover-password', {
-                    email: this.state.email,
-                });
-                console.log(user)
-
+                const res = await api.post("/api/forgot-password", { email: this.state.email });
+                this.error = null;
+                this.$router.push({name: 'login'})
+                this.toast.success(res.data.message);
             } catch (err) {
-                console.log(err)
-            } finally {
+                this.error = err.response?.data?.error || "Something went wrong";
+            }
+            finally {
                 this.loading = false;
             }
         }

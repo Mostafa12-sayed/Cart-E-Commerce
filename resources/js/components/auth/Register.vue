@@ -2,7 +2,7 @@
     <card-component
         :title="'Register'"
         :subtitle="'Create a new account to start using our app.'"
-        class="content register"
+        class="center-container register"
     >
         <v-alert
             v-if="error"

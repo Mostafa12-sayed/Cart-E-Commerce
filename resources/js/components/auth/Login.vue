@@ -2,7 +2,7 @@
     <card-component
         :title="'Login'"
         :subtitle="'Enter your email and password to login.'"
-        class="content"
+        class="center-container"
     >
         <v-alert
             v-if="error"

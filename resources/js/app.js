@@ -9,6 +9,11 @@ import { createVuetify } from "vuetify";
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
 import "@mdi/font/css/materialdesignicons.css";
+
+
+import Toast,  { POSITION }from "vue-toastification";
+// Import the CSS or use your own!
+import "vue-toastification/dist/index.css";
 const router = createRouter({
     history: createWebHistory(),
     routes,
@@ -21,7 +26,10 @@ const vuetify = createVuetify({
     },
 });
 const app = createApp(App);
-
+const options = {
+    position: POSITION.TOP_CENTER,
+    timeout: 5000,
+};
 app.mixin({
     created() {
         if (this === this.$root) {
@@ -59,7 +67,7 @@ router.afterEach(() => {
     store.commit("loader/hideLoader");
 });
 
-
+app.use(Toast , options)
 app.use(router);
 app.use(store);
 app.use(vuetify);
