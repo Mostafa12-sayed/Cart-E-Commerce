@@ -1,5 +1,5 @@
 <template>
-    <v-container class="py-10 d-flex justify-center align-center content">
+    <v-container class="py-10 d-flex justify-center align-center ">
         <v-row class="justify-center" style="max-width: 800px; width: 100%">
             <v-col cols="12">
                 <v-card elevation="4" class="rounded-xl pa-4">
@@ -31,8 +31,8 @@
                             <v-col cols="12" md="6">
                                 <strong>Total:</strong>
                                 <span class="text-success fw-bold">
-                  {{ order.total }} EGP
-                </span>
+                                  {{ order.total }} EGP
+                                </span>
                             </v-col>
                             <v-col cols="12">
                                 <strong>Transaction ID:</strong> {{ order.transaction_id }}
@@ -117,9 +117,7 @@ export default {
 </script>
 
 <style scoped>
-.content {
-    min-height: 80vh;
-}
+
 
 .fw-bold {
     font-weight: bold;

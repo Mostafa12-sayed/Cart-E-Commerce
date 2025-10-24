@@ -40,28 +40,50 @@ app.mixin({
         }
     },
 });
+// router.beforeEach(async (to, from, next) => {
+//     store.commit("loader/showLoader");
+//
+//     if (!store.getters["authenticated"]) {
+//         try {
+//             await store.dispatch("attempt");
+//         } catch (e) {}
+//     }
+//     if (['login', 'register'].includes(to.name) && from.fullPath) {
+//         localStorage.setItem('previous_url', from.fullPath);
+//     }
+//     const isAuthenticated = store.getters["authenticated"];
+//     if (to.meta.requiresAuth && !isAuthenticated) {
+//         return next({ name: "login" });
+//     }
+//
+//     if (to.meta.guest && isAuthenticated) {
+//         return next({ name: "products.index" });
+//     }
+//
+//     next();
+// });
 router.beforeEach(async (to, from, next) => {
     store.commit("loader/showLoader");
 
-    if (!store.getters["authenticated"]) {
-        try {
-            await store.dispatch("attempt");
-        } catch (e) {}
-    }
-    if (['login', 'register'].includes(to.name) && from.fullPath) {
-        localStorage.setItem('previous_url', from.fullPath);
-    }
-    const isAuthenticated = store.getters["authenticated"];
-    if (to.meta.requiresAuth && !isAuthenticated) {
+    // const isAuthenticated = store.getters["auth/authenticated"];
+
+    // أول مرة فقط نحاول نتحقق (لو الصفحة اتعملها refresh)
+    // if (!isAuthenticated && !store.state.auth.userChecked) {
+    //     await store.dispatch("auth/attempt");
+    //     store.state.auth.userChecked = true; // نخليها مرة واحدة فقط
+    // }
+
+    if (to.meta.requiresAuth && !store.getters["authenticated"]) {
         return next({ name: "login" });
     }
 
-    if (to.meta.guest && isAuthenticated) {
-        return next({ name: "products.index" });
+    if (to.meta.guest && store.getters["authenticated"]) {
+        return next({ name: "home" });
     }
 
     next();
 });
+
 router.afterEach(() => {
     // إيقاف الـ loader بعد انتهاء التنقل
     store.commit("loader/hideLoader");

@@ -1,5 +1,5 @@
 <template>
-    <div class="content checkout">
+    <div class=" checkout">
         <div class="row d-flex flex-row justify-content-center">
             <div class="col-md-8">
                 <div class="mt-5">

@@ -82,26 +82,10 @@ body {
 }
 
 /* Fixed navbar */
-.navbar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 60px;
-    background-color: #3f51b5;
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.3rem;
-    font-weight: 600;
-    z-index: 10;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-}
+
 
 /* Main container below navbar */
 .orders-page {
-    margin-top: 80px; /* leave space for navbar */
     display: flex;
     justify-content: center;
     align-items: flex-start;

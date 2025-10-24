@@ -1,98 +1,1 @@
-<template>
-    <div >
-        <Loader :show="loading" />
-
-        <Navbar />
-        <router-view> </router-view>
-    </div>
-</template>
-
-<script>
-import Navbar from "./Navbar.vue";
-import Loader from "./Loader.vue";
-import { mapState } from "vuex";
-export default {
-    name: "App",
-    components: {
-        Navbar,
-        Loader,
-    },
-    computed: {
-        ...mapState("loader", ["loading"]),
-    },
-};
-</script>
-<style>
-.btn {
-    background-color: #0471d6 !important;
-    border-color: #bcd0c7 !important;
-    color: rgb(255, 238, 238);
-}
-.content{
-    margin-top: 100px !important;
-}
-
-
-/* Table responsiveness */
-.table-responsive {
-    overflow-x: auto;
-}
-
-.table th,
-.table td {
-    vertical-align: middle !important;
-    white-space: nowrap;
-}
-
-/* Mobile adjustments */
-@media (max-width: 768px) {
-    h2 {
-        font-size: 1.4rem;
-    }
-
-    .table th,
-    .table td {
-        font-size: 0.85rem;
-        padding: 0.6rem;
-    }
-
-    .v-btn {
-        transform: scale(0.9);
-    }
-
-    .form-control {
-        font-size: 0.9rem;
-    }
-}
-
-/* Extra small screens */
-@media (max-width: 576px) {
-    .checkout {
-        padding: 0 1rem;
-    }
-
-    .v-btn {
-        min-width: 35px !important;
-    }
-}
-nav {
-
-    a {
-        font-weight: bold;
-        color: #1867c0;
-        text-decoration: none;
-        cursor: pointer;
-        &.router-link-exact-active {
-            color: #42b983;
-        }
-    }
-}
-a {
-    font-weight: bold;
-    color: #1867c0;
-    cursor: pointer;
-    &.router-link-exact-active {
-        color: #42b983;
-    }
-}
-</style>
+<!--<template>--><!--    <div >--><!--        <Loader :show="loading" />--><!--        <Navbar />--><!--        <router-view> </router-view>--><!--        <Footer />--><!--    </div>--><!--</template>--><template>    <div class="layout">        <Loader :show="loading" />        <Navbar />        <main class="content">            <router-view />        </main>        <Footer />    </div></template><script>import Navbar from "./Navbar.vue";import Loader from "./Loader.vue";import Footer from "./Footer.vue";import { mapState } from "vuex";export default {    name: "App",    components: {        Navbar,        Loader,Footer    },    computed: {        ...mapState("loader", ["loading"]),    },};</script><style lang="scss">.btn {    background-color: #0471d6 !important;    border-color: #bcd0c7 !important;    color: rgb(255, 238, 238);}/* Table responsiveness */.table-responsive {    overflow-x: auto;}.table th,.table td {    vertical-align: middle !important;    white-space: nowrap;}/* Mobile adjustments */@media (max-width: 768px) {    h2 {        font-size: 1.4rem;    }    .table th,    .table td {        font-size: 0.85rem;        padding: 0.6rem;    }    .v-btn {        transform: scale(0.9);    }    .form-control {        font-size: 0.9rem;    }}/* Extra small screens */@media (max-width: 576px) {    .checkout {        padding: 0 1rem;    }    .v-btn {        min-width: 35px !important;    }}nav {    a {        font-weight: bold;        color: #1867c0;        text-decoration: none;        cursor: pointer;        &.router-link-exact-active {            color: orangered;        }    }    a:hover{        color:orangered;        transition: all 0.3s ease-in-out;    }}a {    font-weight: bold;    color: #1867c0;    cursor: pointer;    &.router-link-exact-active {        color: orangered;    }}.product-grid {    display: grid;    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));    gap: 1.5rem;}.layout {    display: flex;    flex-direction: column;    min-height: 100vh; /* يخلي الصفحة تاخد كل ارتفاع الشاشة */}.content {    flex: 1; /* يخلي الـ content ياخد كل المساحة الفاضية بين الـ navbar والـ footer */}</style>

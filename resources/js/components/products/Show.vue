@@ -1,5 +1,5 @@
 <template>
-    <div class="content container ">
+    <div class=" container py-10 my-10 ">
         <div class="row g-4 align-items-center">
             <!-- Product Image -->
 

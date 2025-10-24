@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\OrdersController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\ProductsController;
@@ -34,4 +35,6 @@ Route::middleware(['web', 'api'])->group(function () {
     Route::get('/user', [AuthController::class, 'user'])->middleware('auth:sanctum');
     Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLink']);
     Route::post('/reset-password', [PasswordResetController::class, 'resetPassword']);
+    Route::post('/contact', [ContactController::class, 'store']);
+    Route::get('/categories', [ProductsController::class, 'categories']);
 });

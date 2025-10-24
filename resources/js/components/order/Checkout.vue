@@ -1,11 +1,9 @@
 <template>
-    <!-- 🛒 لو الكارت فاضي -->
-    <div v-if="!cart.length" class="content checkout container-fluid py-5">
+    <div v-if="!cart.length" class=" checkout container-fluid py-10 my-10">
         <EmptyCart />
     </div>
 
-    <!-- 🛍️ لو فيه منتجات -->
-    <div v-else class="content checkout container py-5 rounded cart">
+    <div v-else class=" checkout container py-10 my-10 rounded cart">
         <div class="row">
             <!-- 🧾 Cart Items -->
             <div   :class="user ? 'col-md-8' : 'col-md-12'">
@@ -199,13 +197,10 @@
 <script>
 import { loadStripe } from "@stripe/stripe-js";
 import EmptyCart from "@/components/order/EmptyCart.vue";
-import Dialog from "@/components/auth/Dialog.vue";
-import Login from "@/components/auth/Login.vue";
 export default {
-    components: {EmptyCart ,Dialog ,Login},
+    components: {EmptyCart },
     data() {
         return {
-            Login,
             stripe: {},
             cardElement: {},
             customer: {

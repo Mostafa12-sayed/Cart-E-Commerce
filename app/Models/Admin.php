@@ -22,7 +22,6 @@ class Admin extends Authenticatable implements FilamentUser, HasName
         'remember_token',
     ];
 
-    // ✅ Filament requires these methods:
     public function canAccessPanel(\Filament\Panel $panel): bool
     {
         return true; // Or apply your logic (e.g., role-based)

@@ -1,10 +1,18 @@
 export const routes = [
     {
         name: "products.index",
-        path: "/",
+        path: "/shop",
         component: () => import("./components/products/Index.vue"),
         meta: {
             title: 'Products',
+        }
+    },
+    {
+        name: "home",
+        path: "/",
+        component: () => import("./components/views/HomePage.vue"),
+        meta: {
+            title: 'Home',
         }
     },
     {
@@ -86,5 +94,30 @@ export const routes = [
             title: 'My Order',
             requiresAuth: true // ✅ برضو جزء من عملية الشراء
         }
+    },
+    {
+        path: '/support',
+        name: 'support',
+        component: () => import('./components/views/Support.vue'),
+    },
+    {
+        path: '/faq',
+        name: 'faq',
+        component: () => import('./components/views/Faq.vue'),
+    },
+    {
+        path: '/returns',
+        name: 'returns',
+        component: () => import('./components/views/Returns.vue'),
+    },
+    {
+        path: '/privacy',
+        name: 'privacy',
+        component: () => import('./components/views/PrivacyPolicy.vue'),
+    },
+    {
+        path: '/contact',
+        name: 'contact',
+        component: () => import('./components/views/Contact.vue'),
     },
 ];
