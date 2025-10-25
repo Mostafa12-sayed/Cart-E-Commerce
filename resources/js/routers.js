@@ -120,4 +120,9 @@ export const routes = [
         name: 'contact',
         component: () => import('./components/views/Contact.vue'),
     },
+    {
+        path: '/:pathMatch(.*)*',
+        name: 'NotFound',
+        component: ()=> import('./components/views/NotFound.vue'),
+    },
 ];

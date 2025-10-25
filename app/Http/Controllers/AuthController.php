@@ -39,7 +39,11 @@ class AuthController extends Controller
         Auth::login($user);
 
         // Cart persists in session automatically - no transfer needed!
-
+//        $cart = session('cart', []);
+//        session(['cart' => $cart]);
+        $oldCart = session('cart');
+        $request->session()->regenerate();
+        session(['cart' => $oldCart]); // ✅ رجّع السلة
         return response()->json([
             'success' => true,
             'message' => 'Registration successful',
@@ -48,7 +52,6 @@ class AuthController extends Controller
                 'name' => $user->name,
                 'email' => $user->email,
             ],
-            'cart' => $request->session()->get('cart', []),
         ], 201);
     }
 
@@ -73,7 +76,9 @@ class AuthController extends Controller
             $request->session()->regenerate();
 
             // Cart stays in session - automatically preserved!
-
+            $oldCart = session('cart');
+            $request->session()->regenerate();
+            session(['cart' => $oldCart]); // ✅ رجّع السلة
             return response()->json([
                 'success' => true,
                 'message' => 'Login successful',
@@ -81,8 +86,7 @@ class AuthController extends Controller
                     'id' => Auth::user()->id,
                     'name' => Auth::user()->name,
                     'email' => Auth::user()->email,
-                ],
-                'cart' => $request->session()->get('cart', []),
+                ]
             ]);
         }
 
